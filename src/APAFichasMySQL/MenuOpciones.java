@@ -4,16 +4,14 @@ public class MenuOpciones {
 	Scanner sc = new Scanner(System.in);
 	String tipoFicha;
 	String opcion;
+	int parseOpcion;
 	ConexionBD conexion;
 	QueryLibros ql;
 	QueryWeb qw;
-	int parseOpcion;
 	
 	public MenuOpciones(String tipoFicha) {
 		this.tipoFicha = tipoFicha;
 		this.conexion = new ConexionBD(this.tipoFicha);
-		this.ql = new QueryLibros(this.tipoFicha);
-		this.qw = new QueryWeb(this.tipoFicha);
 	}
 	
 	public void menu() {
@@ -32,14 +30,17 @@ public class MenuOpciones {
 				System.out.println("Ingrese una opcion valida");
 				continue;
 			}
+		
 			switch(parseOpcion) {
 			case 5:
 				salida = 1;
 				break;
 			case 1:
 				if(this.tipoFicha == "fichasLibros") {
+					ql = new QueryLibros(this.tipoFicha);
 					ql.recolectarInfoFichaLibro();
 				}else {
+					qw = new QueryWeb(this.tipoFicha);
 					qw.recolectarInfoFichaWeb();
 				}
 				break;
@@ -90,21 +91,12 @@ public class MenuOpciones {
 				salida = 1;
 				break;
 			case 1,2,3,4:
-				try {
-					this.conexion.busquedaGeneral(parseOpcion);
-				}catch(Exception e) {
-					System.out.println("Error al realizar la busqueda");
-				}
-				
+				this.conexion.busquedaGeneral(parseOpcion);
 				break;
 			case 5,6,7:
-				try {
-					this.ql.buscarLibro(parseOpcion);
-				}catch(Exception e) {
-					System.out.println("Error al realizar la busqueda");
-				}
-				
-				break;
+					ql = new QueryLibros(this.tipoFicha);
+					ql.buscarLibro(parseOpcion);
+					break;
 			default:
 				System.out.println("Ingrese una opcion valida");
 			}
@@ -134,19 +126,12 @@ public class MenuOpciones {
 				salida = 1;
 				break;
 			case 1,2,3,4:
-				try {
 					this.conexion.busquedaGeneral(parseOpcion);
-				}catch(Exception e) {
-					System.out.println("Error al realizar la busqueda");
-				}
-				break;
+					break;
 			case 5,6:
-				try {
-					this.qw.buscarFichaWeb(parseOpcion);
-				}catch(Exception e) {
-					System.out.println("Error al realizar la busqueda");
-				}
-				break;
+					qw = new QueryWeb(this.tipoFicha);
+					qw.buscarFichaWeb(parseOpcion);
+					break;
 			default:
 				System.out.println("Ingrese una opcion valida");
 				break;
@@ -157,30 +142,27 @@ public class MenuOpciones {
 	private void eliminarFichas() {
 		String opcion;
 		int parseOpcion;
-		try {
-			while(true) {
-				ArrayList<String> fichas = this.conexion.obtenerIDFicha();
-				if(fichas.size() > 0) {
-					System.out.println("Ingrese el id de la ficha que desea eliminar");
-					for(String ficha:fichas) {
-						System.out.println(ficha);
-					}
-					System.out.println("(0): Volver");
-					opcion = sc.nextLine().toLowerCase().strip();
-					parseOpcion = Integer.parseInt(opcion);
-					if(parseOpcion == 0) {
-						break;
-					}else {
-						this.conexion.eliminarFicha(opcion);
-					}
-				}else {
-					System.out.println("No hay fichas para eliminar");
-					break;
+		while(true) {
+			ArrayList<String> fichas = this.conexion.obtenerIDFicha();
+			if(fichas.size() > 0) {
+				System.out.println("Ingrese el id de la ficha que desea eliminar");
+				for(String ficha:fichas) {
+					System.out.println(ficha);
 				}
-							}
-		}catch(Exception e) {
-			System.out.println("Error al intentar eliminar una ficha");
+				System.out.println("(0): Volver");
+				opcion = sc.nextLine().toLowerCase().strip();
+				parseOpcion = Integer.parseInt(opcion);
+				if(parseOpcion == 0) {
+					break;
+				}else {
+					this.conexion.eliminarFicha(opcion);
+				}
+			}else {
+				System.out.println("No hay fichas para eliminar");
+				break;
+			}
 		}
+		
 	}
 
 }

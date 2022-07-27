@@ -142,11 +142,7 @@ public class ConexionBD {
 		}catch(Exception e) {
 			System.out.println("Error al eliminar la ficha");
 		}
-		
-		
-		
-		
-	}
 
+	}
 
 }
