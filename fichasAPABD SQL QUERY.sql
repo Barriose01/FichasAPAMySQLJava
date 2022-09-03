@@ -13,7 +13,7 @@ titulo varchar(100),
 lugarPublicacion varchar(20),
 paisPublicacion varchar(20),
 editorial varchar(20),
-ficha varchar(100));
+ficha varchar(200));
 
 DROP TABLE IF EXISTS fichasWeb;
 CREATE TABLE fichasWeb(
@@ -24,10 +24,9 @@ ano char(4),
 titulo varchar(100),
 fechaRecuperacion varchar(30),
 enlaceRecuperacion varchar(100),
-ficha varchar(100));
+ficha varchar(200));
 
-alter table fichasLibros modify ficha varchar(200);
-alter table fichasWeb modify ficha varchar(200);
+
 
 
 
@@ -52,10 +51,10 @@ CREATE PROCEDURE buscarFichaLibro(in nombreAutor varchar(20), in apellidoAutor v
 in anoPublicacion char(4), in tituloPublicacion varchar(100), in lugar varchar(20), 
 in pais varchar(20), in editorialLibro varchar(20))
 BEGIN
-	SELECT id, ficha FROM fichasLibros WHERE nombre= nombreAutor
-    OR apellido = apellidoAutor OR ano = anoPublicacion
-    OR titulo = tituloPublicacion OR lugarPublicacion = lugar
-    OR paisPublicacion = pais OR editorial = editorialLibro;
+	SELECT id, ficha FROM fichasLibros WHERE nombre LIKE CONCAT('%',nombreAutor,'%')
+    AND apellido LIKE CONCAT('%',apellidoAutor,'%') AND ano LIKE CONCAT('%',anoPublicacion,'%')
+    AND titulo LIKE CONCAT('%',tituloPublicacion,'%') AND lugarPublicacion LIKE CONCAT('%',lugar,'%')
+    AND paisPublicacion LIKE CONCAT('%',pais,'%') AND editorial LIKE CONCAT('%',editorialLibro,'%');
 END &&
 
 DROP PROCEDURE IF EXISTS buscarFichaWeb;
@@ -66,9 +65,11 @@ CREATE PROCEDURE buscarFichaWeb(in nombreAutor varchar(20),
  in enlace varchar(100)
  )
  BEGIN
-	SELECT id, ficha FROM fichasWeb WHERE nombre = nombreAutor OR apellido = apellidoAutor
-    OR ano = anoPublicacion OR titulo = tituloPublicacion OR fechaRecuperacion = fecha
-    OR enlaceRecuperacion = enlace;
+	SELECT id, ficha FROM fichasWeb WHERE nombre LIKE CONCAT('%',nombreAutor,'%') 
+    AND apellido LIKE CONCAT('%',apellidoAutor,'%')
+    AND ano LIKE CONCAT('%',anoPublicacion,'%') AND titulo LIKE CONCAT('%',tituloPublicacion,'%') 
+    AND fechaRecuperacion LIKE CONCAT('%',fecha,'%')
+    AND enlaceRecuperacion LIKE CONCAT ('%',enlace,'%');
 END &&
 
 DROP PROCEDURE IF EXISTS modificarDatosLibro;
